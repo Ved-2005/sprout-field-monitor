@@ -11,43 +11,69 @@ import { Loader2, Sprout } from "lucide-react";
 const Signup = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const [farmerName, setFarmerName] = useState("");
   const [username, setUsername] = useState("");
+  const [farmLocation, setFarmLocation] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const name = farmerName.trim();
     const u = username.trim();
-    if (u.length < 3) return toast.error("Username must be at least 3 characters.");
+    const loc = farmLocation.trim();
+    if (name.length < 2) return toast.error("Please enter your farmer name.");
+    if (u.length < 3) return toast.error("Farm username must be at least 3 characters.");
     if (!/^[a-zA-Z0-9_.-]+$/.test(u))
-      return toast.error("Username can only contain letters, numbers, _ . -");
+      return toast.error("Farm username can only contain letters, numbers, _ . -");
+    if (loc.length < 2) return toast.error("Please enter your farm location.");
     if (password.length < 6) return toast.error("Password must be at least 6 characters.");
-    if (password !== confirm) return toast.error("Passwords do not match.");
 
     setSubmitting(true);
     try {
-      await signup(u, password);
-      toast.success(`Account created — welcome, ${u}!`);
+      await signup({ farmerName: name, username: u, farmLocation: loc, password });
+      toast.success(`Welcome, ${name}! Your farm is registered.`);
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Signup failed.");
+      toast.error(err instanceof Error ? err.message : "Registration failed.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <AuthLayout title="Create your account" subtitle="Start monitoring your fields in seconds.">
+    <AuthLayout title="Register your farm" subtitle="Set up your Smart Agri profile in under a minute.">
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="farmerName">Farmer Name</Label>
+          <Input
+            id="farmerName"
+            value={farmerName}
+            onChange={(e) => setFarmerName(e.target.value)}
+            placeholder="e.g. Asha Patel"
+            maxLength={60}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="username">Farm Username</Label>
           <Input
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="farmhand42"
+            placeholder="e.g. greenacres42"
             maxLength={40}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="farmLocation">Farm Location</Label>
+          <Input
+            id="farmLocation"
+            value={farmLocation}
+            onChange={(e) => setFarmLocation(e.target.value)}
+            placeholder="e.g. Nashik, Maharashtra"
+            maxLength={80}
             required
           />
         </div>
@@ -62,23 +88,12 @@ const Signup = () => {
             required
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="confirm">Confirm password</Label>
-          <Input
-            id="confirm"
-            type="password"
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-            placeholder="Re-enter your password"
-            required
-          />
-        </div>
         <Button type="submit" variant="hero" size="lg" className="w-full" disabled={submitting}>
           {submitting ? <Loader2 className="animate-spin" /> : <Sprout />}
-          {submitting ? "Creating account…" : "Sign up"}
+          {submitting ? "Registering…" : "Register"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
+          Already registered?{" "}
           <Link to="/login" className="font-semibold text-primary hover:underline">
             Sign in
           </Link>
