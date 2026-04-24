@@ -18,13 +18,13 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password) {
-      toast.error("Please enter your username and password.");
+      toast.error("Please enter your farm username and password.");
       return;
     }
     setSubmitting(true);
     try {
       await login(username.trim(), password);
-      toast.success(`Welcome back, ${username.trim()}!`);
+      toast.success("Welcome back to your farm dashboard!");
       navigate("/dashboard", { replace: true });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Login failed.");
@@ -34,16 +34,16 @@ const Login = () => {
   };
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Sign in to access your field dashboard.">
+    <AuthLayout title="Welcome back" subtitle="Sign in to your Smart Agri dashboard.">
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="username">Farm Username</Label>
           <Input
             id="username"
             autoComplete="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="farmhand42"
+            placeholder="greenacres42"
             maxLength={40}
             required
           />
@@ -62,12 +62,12 @@ const Login = () => {
         </div>
         <Button type="submit" variant="hero" size="lg" className="w-full" disabled={submitting}>
           {submitting ? <Loader2 className="animate-spin" /> : <LogIn />}
-          {submitting ? "Signing in…" : "Sign in"}
+          {submitting ? "Signing in…" : "Login"}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
-          New to SproutSense?{" "}
+          New to Smart Agri?{" "}
           <Link to="/signup" className="font-semibold text-primary hover:underline">
-            Create an account
+            Register your farm
           </Link>
         </p>
       </form>
