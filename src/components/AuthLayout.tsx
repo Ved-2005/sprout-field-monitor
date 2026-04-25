@@ -29,10 +29,7 @@ export const AuthLayout = ({
             <Logo size={56} />
             <div>
               <h1 className="font-display text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
-                Grow smarter with{" "}
-                <span className="bg-gradient-primary bg-clip-text text-transparent">
-                  real-time field intelligence
-                </span>
+                Grow smarter with technology
               </h1>
               <p className="mt-4 max-w-md text-base text-muted-foreground">
                 Monitor current, voltage and power across every sensor node in your fields. Spot

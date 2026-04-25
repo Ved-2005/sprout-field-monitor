@@ -13,7 +13,7 @@ export const Logo = ({
   <div className={cn("flex items-center gap-3", className)}>
     <img
       src={logo}
-      alt="SproutSense logo"
+      alt="SmartAgri logo"
       width={size}
       height={size}
       className="rounded-full shadow-soft"
@@ -22,7 +22,7 @@ export const Logo = ({
     {withWordmark && (
       <div className="flex flex-col leading-none">
         <span className="font-display text-lg font-bold tracking-tight text-foreground">
-          SproutSense
+          SmartAgri
         </span>
         <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
           Smart Agriculture
