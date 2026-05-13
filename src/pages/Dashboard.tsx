@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import AdminDashboard from "./AdminDashboard";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Activity, Gauge, LogOut, MapPin, RefreshCw, Zap, type LucideIcon } from "lucide-react";
@@ -146,6 +147,7 @@ const Dashboard = () => {
   const initials = useMemo(() => formatInitials(user?.farmerName ?? ""), [user?.farmerName]);
 
   if (!user) return null;
+  if (user.username.toLowerCase().startsWith("admin")) return <AdminDashboard />;
 
   const cards: { metric: Metric; reading: number }[] = [
     { metric: METRICS[0], reading: readings.current },
