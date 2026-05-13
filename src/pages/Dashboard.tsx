@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import AdminDashboard from "./AdminDashboard";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Activity, Gauge, LogOut, MapPin, RefreshCw, Zap, type LucideIcon } from "lucide-react";
