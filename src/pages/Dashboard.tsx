@@ -147,6 +147,7 @@ const Dashboard = () => {
   const initials = useMemo(() => formatInitials(user?.farmerName ?? ""), [user?.farmerName]);
 
   if (!user) return null;
+  if (user.username.toLowerCase().startsWith("admin")) return <AdminDashboard />;
 
   const cards: { metric: Metric; reading: number }[] = [
     { metric: METRICS[0], reading: readings.current },
