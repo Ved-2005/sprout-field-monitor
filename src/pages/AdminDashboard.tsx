@@ -12,7 +12,14 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
 type StoredUser = {
@@ -233,97 +240,62 @@ const AdminDashboard = () => {
             </span>
           </div>
 
-          <div className="border-t border-border/60 p-6">
+          <div className="border-t border-border/60">
             {activeUsers.length === 0 ? (
               <p className="p-8 text-center text-sm text-muted-foreground">
                 No active farmers registered yet.
               </p>
             ) : (
-              <Tabs defaultValue={activeUsers[0].username} className="w-full">
-                <TabsList className="flex h-auto w-full flex-wrap gap-2 rounded-2xl bg-secondary/60 p-1.5">
-                  {activeUsers.map((u) => (
-                    <TabsTrigger
-                      key={u.username}
-                      value={u.username}
-                      className="flex-1 min-w-[140px] rounded-xl px-4 py-2 text-sm font-semibold text-muted-foreground transition-smooth data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-soft"
-                    >
-                      Node: {u.farmerName.split(" ")[0]}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-
-                {activeUsers.map((u) => {
-                  const r = readings[u.username.toLowerCase()] ?? buildReadingForUser();
-                  const metrics = [
-                    { label: "Current", unit: "A", icon: Activity, latest: r.current, avg: SYSTEM_AVERAGES.current },
-                    { label: "Voltage", unit: "V", icon: Gauge, latest: r.voltage, avg: SYSTEM_AVERAGES.voltage },
-                    { label: "Power", unit: "W", icon: Zap, latest: r.power, avg: SYSTEM_AVERAGES.power },
-                  ];
-                  return (
-                    <TabsContent key={u.username} value={u.username} className="mt-6 space-y-6">
-                      <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-secondary/40 p-4">
-                        <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-primary font-display text-sm font-bold text-primary-foreground">
-                          {formatInitials(u.farmerName)}
-                        </span>
-                        <div>
-                          <p className="font-display text-base font-bold text-foreground">{u.farmerName}</p>
-                          <p className="text-xs text-muted-foreground">@{u.username} · {u.farmLocation}</p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                          Latest Data
-                        </h4>
-                        <div className="grid gap-4 md:grid-cols-3">
-                          {metrics.map((m) => {
-                            const Icon = m.icon;
-                            const isLow = m.latest < m.avg;
-                            return (
-                              <div key={m.label} className="rounded-2xl border border-border/60 bg-card p-5 shadow-soft">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                  <Icon className="h-4 w-4 text-primary" />
-                                  <span className="text-xs font-semibold uppercase tracking-wider">{m.label}</span>
-                                </div>
-                                <p className={cn(
-                                  "mt-3 font-display text-3xl font-extrabold tabular-nums",
-                                  isLow ? "text-destructive" : "text-success",
-                                )}>
-                                  {m.latest.toFixed(2)}
-                                  <span className="ml-1 text-sm font-semibold opacity-80">{m.unit}</span>
-                                </p>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                          Average Data
-                        </h4>
-                        <div className="grid gap-4 md:grid-cols-3">
-                          {metrics.map((m) => {
-                            const Icon = m.icon;
-                            return (
-                              <div key={m.label} className="rounded-2xl bg-secondary/60 p-5">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                  <Icon className="h-4 w-4" />
-                                  <span className="text-xs font-semibold uppercase tracking-wider">{m.label} Avg</span>
-                                </div>
-                                <p className="mt-3 font-display text-3xl font-bold tabular-nums text-foreground">
-                                  {m.avg.toFixed(2)}
-                                  <span className="ml-1 text-sm font-semibold text-muted-foreground">{m.unit}</span>
-                                </p>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </TabsContent>
-                  );
-                })}
-              </Tabs>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Farmer</TableHead>
+                    <TableHead>Username</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead className="text-right">Current (A)</TableHead>
+                    <TableHead className="text-right">Voltage (V)</TableHead>
+                    <TableHead className="text-right">Power (W)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {activeUsers.map((u) => {
+                    const r = readings[u.username.toLowerCase()] ?? buildReadingForUser();
+                    const cell = (val: number, avg: number) => (
+                      <span
+                        className={cn(
+                          "font-semibold tabular-nums",
+                          val < avg ? "text-destructive" : "text-success",
+                        )}
+                      >
+                        {val.toFixed(2)}
+                      </span>
+                    );
+                    return (
+                      <TableRow key={u.username}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-primary font-display text-xs font-bold text-primary-foreground">
+                              {formatInitials(u.farmerName)}
+                            </span>
+                            <span className="font-semibold text-foreground">{u.farmerName}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">@{u.username}</TableCell>
+                        <TableCell className="text-muted-foreground">{u.farmLocation}</TableCell>
+                        <TableCell className="text-right">
+                          {cell(r.current, SYSTEM_AVERAGES.current)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {cell(r.voltage, SYSTEM_AVERAGES.voltage)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {cell(r.power, SYSTEM_AVERAGES.power)}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             )}
           </div>
         </section>
