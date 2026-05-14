@@ -14,36 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      BMP: {
-        Row: {
-          "current (A)": number | null
-          date: string | null
-          gps: string | null
-          "id (username)": string
-          "power (W)": number | null
-          time: string | null
-          "voltage (V)": number | null
-        }
-        Insert: {
-          "current (A)"?: number | null
-          date?: string | null
-          gps?: string | null
-          "id (username)": string
-          "power (W)"?: number | null
-          time?: string | null
-          "voltage (V)"?: number | null
-        }
-        Update: {
-          "current (A)"?: number | null
-          date?: string | null
-          gps?: string | null
-          "id (username)"?: string
-          "power (W)"?: number | null
-          time?: string | null
-          "voltage (V)"?: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
